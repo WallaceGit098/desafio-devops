@@ -5,8 +5,11 @@
 data "aws_caller_identity" "current" {}
 
 data "aws_eks_node_group" "desafio" {
+  depends_on = [
+    module.eks_al2023
+  ]
   cluster_name    = module.eks_al2023.cluster_name
-  node_group_name = "${local.name}-ng"
+  node_group_name = module.eks_al2023.eks_managed_node_groups["example"].node_group_id
 }
 # ConfigMap aws-auth
 resource "kubernetes_config_map" "aws_auth" {

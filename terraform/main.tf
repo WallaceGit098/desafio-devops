@@ -1,10 +1,17 @@
-
 provider "aws" {
   region = local.region
 }
 
 provider "kubernetes" {
   config_path = "~/.kube/config"
+}
+
+terraform {
+  backend "s3" {
+    bucket         = "tfstate-wallace-desafio"
+    key            = "terraform.tfstate"
+    region         = "us-east-2"
+  }
 }
 
 data "aws_availability_zones" "available" {
