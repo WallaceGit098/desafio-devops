@@ -58,3 +58,10 @@ module "eks_al2023" {
   }
   tags = local.tags
 }
+
+resource "null_resource" "kubeconfig" {
+  provisioner "local-exec" {
+    command = "aws eks update-kubeconfig --region us-east-2 --name desafio-eks-wallace"
+  }
+  depends_on = [module.eks_al2023]
+}
