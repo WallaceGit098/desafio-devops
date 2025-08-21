@@ -61,7 +61,7 @@ module "eks_al2023" {
 
 resource "null_resource" "kubeconfig" {
   provisioner "local-exec" {
-    command = "aws eks update-kubeconfig --region us-east-2 --name desafio-eks-wallace"
+    command = "aws eks update-kubeconfig --region us-east-2 --name desafio-eks-wallace --kubeconfig /home/runner/.kube/config"
   }
   depends_on = [module.eks_al2023]
 }

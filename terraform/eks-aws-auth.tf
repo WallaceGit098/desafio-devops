@@ -14,7 +14,7 @@ data "aws_eks_node_group" "desafio" {
 # ConfigMap aws-auth
 resource "kubernetes_config_map" "aws_auth" {
   depends_on = [
-    module.eks_al2023
+    null_resource.kubeconfig
   ]
 
   metadata {

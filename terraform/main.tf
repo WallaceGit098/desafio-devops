@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 provider "kubernetes" {
-  config_path = "~/.kube/config"
+  config_path = "/home/runner/.kube/config"
 }
 
 terraform {
