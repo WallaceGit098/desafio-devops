@@ -4,16 +4,12 @@
 # Pega a conta atual
 data "aws_caller_identity" "current" {}
 
-locals {
-  node_group_name = split(":", data.aws_eks_node_group.desafio.id)[1]
-}
-
 data "aws_eks_node_group" "desafio" {
   depends_on = [
     module.eks_al2023
   ]
   cluster_name    = module.eks_al2023.cluster_name
-  node_group_name = local.node_group_name
+  node_group_name = split(":", module.eks_al2023.eks_managed_node_groups["example"].node_group_id)[length(split(":", module.eks_al2023.eks_managed_node_groups["example"].node_group_id))-1]
 }
 # ConfigMap aws-auth
 resource "kubernetes_config_map" "aws_auth" {
