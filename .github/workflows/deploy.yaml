@@ -44,7 +44,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform plan -var-file=${{ env.TF_VAR_file }} -out=tfplan -input=false
+        run: terraform plan -out=tfplan -input=false
 
       - name: Upload plan artifact (para PRs)
         if: github.event_name == 'pull_request'
