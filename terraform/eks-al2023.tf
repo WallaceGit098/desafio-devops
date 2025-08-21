@@ -59,17 +59,25 @@ module "eks_al2023" {
   tags = local.tags
 }
 
+resource "null_resource" "kubeconfig" {
+  provisioner "local-exec" {
+    command = "aws eks update-kubeconfig --region us-east-2 --name ${module.eks_al2023.cluster_id} --kubeconfig .kubeconfig"
+  }
+  depends_on = [module.eks_al2023]
+}
+
 resource "null_resource" "import_aws_auth" {
   provisioner "local-exec" {
     command = <<EOT
+      export KUBECONFIG=${path.module}/.kubeconfig
       if kubectl get configmap aws-auth -n kube-system; then
         terraform import kubernetes_config_map.aws_auth kube-system/aws-auth || true
       fi
     EOT
   }
+
   depends_on = [
-    module.eks_al2023,
-    module.eks_al2023.eks_managed_node_groups
+    null_resource.kubeconfig,
+    module.eks_al2023
   ]
 }
-
