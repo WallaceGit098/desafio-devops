@@ -22,11 +22,15 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Configurar credenciais AWS via OIDC
+      - name: Configurar credenciais AWS com access key
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: Testar AWS CLI
+        run: aws sts get-caller-identity
 
       - name: Instalar Terraform
         uses: hashicorp/setup-terraform@v3
