@@ -59,9 +59,17 @@ module "eks_al2023" {
   tags = local.tags
 }
 
-resource "null_resource" "kubeconfig" {
+resource "null_resource" "import_aws_auth" {
   provisioner "local-exec" {
-    command = "aws eks update-kubeconfig --region us-east-2 --name desafio-eks-wallace --kubeconfig .kubeconfig"
+    command = <<EOT
+      if kubectl get configmap aws-auth -n kube-system; then
+        terraform import kubernetes_config_map.aws_auth kube-system/aws-auth || true
+      fi
+    EOT
   }
-  depends_on = [module.eks_al2023]
+  depends_on = [
+    module.eks_al2023,
+    module.eks_al2023.eks_managed_node_groups
+  ]
 }
+
