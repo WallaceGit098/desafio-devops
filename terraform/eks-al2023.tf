@@ -61,18 +61,20 @@ module "eks_al2023" {
 
 resource "null_resource" "kubeconfig" {
   provisioner "local-exec" {
-    command = "aws eks update-kubeconfig --region us-east-2 --name ${module.eks_al2023.cluster_id} --kubeconfig .kubeconfig"
+    command = "aws eks update-kubeconfig --region us-east-2 --name ${module.eks_al2023.cluster_name} --kubeconfig .kubeconfig"
   }
   depends_on = [module.eks_al2023]
 }
 
-resource "null_resource" "import_aws_auth" {
+resource "null_resource" "update_aws_auth" {
   provisioner "local-exec" {
     command = <<EOT
       export KUBECONFIG=${path.module}/.kubeconfig
-      if kubectl get configmap aws-auth -n kube-system; then
-        terraform import kubernetes_config_map.aws_auth kube-system/aws-auth || true
-      fi
+
+      # Adiciona usuário ao mapUsers
+      kubectl get configmap aws-auth -n kube-system -o yaml | \
+        yq e '.data.mapUsers |= . + [{"userarn":"${aws_iam_user.desafio_aquarela.arn}","username":"desafio_aquarela","groups":["system:masters"]}]' - | \
+        kubectl apply -f -
     EOT
   }
 
