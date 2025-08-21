@@ -55,31 +55,15 @@ module "eks_al2023" {
         }
       }
     }
+  desafio_aquarela = {
+      principal_arn = aws_iam_user.desafio_aquarela.arn
+      policy_associations = {
+        admin = {
+          policy_arn   = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+          access_scope = { type = "cluster" }
+        }
+      }
+    }  
   }
   tags = local.tags
-}
-
-resource "null_resource" "kubeconfig" {
-  provisioner "local-exec" {
-    command = "aws eks update-kubeconfig --region us-east-2 --name ${module.eks_al2023.cluster_name} --kubeconfig .kubeconfig"
-  }
-  depends_on = [module.eks_al2023]
-}
-
-resource "null_resource" "update_aws_auth" {
-  provisioner "local-exec" {
-    command = <<EOT
-      export KUBECONFIG=${path.module}/.kubeconfig
-
-      # Adiciona usuário ao mapUsers
-      kubectl get configmap aws-auth -n kube-system -o yaml | \
-        yq e '.data.mapUsers |= . + [{"userarn":"${aws_iam_user.desafio_aquarela.arn}","username":"desafio_aquarela","groups":["system:masters"]}]' - | \
-        kubectl apply -f -
-    EOT
-  }
-
-  depends_on = [
-    null_resource.kubeconfig,
-    module.eks_al2023
-  ]
 }
