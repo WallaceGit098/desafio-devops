@@ -27,4 +27,4 @@ Este projeto provisiona um cluster EKS gerenciado na AWS utilizando Terraform, c
 ## Observações
 - O usuário IAM criado terá permissões administrativas.
 - O arquivo `eks-aws-auth.tf` garante o acesso dos nodes e do usuário ao cluster.
-- Os recursos são criados na região definida em `main.tf`.
+- Os recursos são criados na região definida em `main.tf`.aa
