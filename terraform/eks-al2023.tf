@@ -23,7 +23,7 @@ module "eks_al2023" {
   eks_managed_node_groups = {
     example = {
       name = "${local.name}-ng"
-      instance_types = ["t4g.xlarge"]
+      instance_types = ["t3.xlarge"]
       ami_type       = "AL2023_x86_64_STANDARD"
       min_size = 1
       max_size = 5
