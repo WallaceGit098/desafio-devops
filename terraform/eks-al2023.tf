@@ -23,11 +23,11 @@ module "eks_al2023" {
   eks_managed_node_groups = {
     example = {
       name = "${local.name}-ng"
-      instance_types = ["t3.small"]
+      instance_types = ["t3.medium"]
       ami_type       = "AL2023_x86_64_STANDARD"
       min_size = 1
-      max_size = 4
-      desired_size = 3
+      max_size = 5
+      desired_size = 4
       cloudinit_pre_nodeadm = [
         {
           content_type = "application/node.eks.aws"
