@@ -26,8 +26,8 @@ module "eks_al2023" {
       instance_types = ["t3.small"]
       ami_type       = "AL2023_x86_64_STANDARD"
       min_size = 1
-      max_size = 3
-      desired_size = 2
+      max_size = 4
+      desired_size = 3
       cloudinit_pre_nodeadm = [
         {
           content_type = "application/node.eks.aws"
